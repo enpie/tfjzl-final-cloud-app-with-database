@@ -1,5 +1,10 @@
 from django.contrib import admin
 from .models import Course, Lesson, Question, Choice, Submission, Enrollment
+# Đảm bảo import đủ các class giả lập hoặc có sẵn từ bài học
+from django.contrib.auth.models import User as Learner
+
+class Instructor(models.Model):
+    pass
 
 class LessonInline(admin.StackedInline):
     model = Lesson
