@@ -24,6 +24,14 @@ class Question(models.Model):
     question_text = models.CharField(max_length=500, default="question")
     grade = models.IntegerField(default=1)
 
+    def is_get_score(self, selected_ids):
+        all_answers = self.choice_set.filter(is_correct=True).count()
+        selected_correct = self.choice_set.filter(is_correct=True, id__in=selected_ids).count()
+        selected_wrong = self.choice_set.filter(is_correct=False, id__in=selected_ids).count()
+        if all_answers == selected_correct and selected_wrong == 0:
+            return True
+        return False
+
     def __str__(self):
         return self.question_text
 
@@ -39,6 +47,9 @@ class Submission(models.Model):
     enrollment = models.ForeignKey('Enrollment', on_delete=models.CASCADE)
     choices = models.ManyToManyField(Choice)
     date_submitted = models.DateTimeField(default=now)
+
+    def __str__(self):
+        return f"Submission {self.id} for {self.enrollment}"
 
 class Enrollment(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
